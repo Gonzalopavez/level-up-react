@@ -1,0 +1,40 @@
+{
+    "productos": [
+        {
+            "id": "prod-01",
+            "nombre": "Tarjeta Gráfica RTX 4090",
+            "precio": 1899990,
+            "imagen": "img/productos/rtx.jpg",
+            "categoria": "Hardware",
+            "descripcion": "Rendimiento sin precedentes..."
+        },
+        {
+            "id": "prod-02",
+            "nombre": "Procesador AMD Ryzen 9",
+            "precio": 549990,
+            "imagen": "img/productos/ryzen.jpg",
+            "categoria": "Hardware",
+            "descripcion": "Rendimiento extremo..."
+        }
+    ],
+    "usuarios": [
+        {
+            "id": "1",
+            "run": "11111111-1",
+            "nombre": "Admin",
+            "apellidos": "Principal",
+            "correo": "admin@levelupgamer.cl",
+            "password": "admin",
+            "tipo": "Administrador"
+        },
+        {
+            "id": "2",
+            "run": "22222222-2",
+            "nombre": "Pepito",
+            "apellidos": "Cliente",
+            "correo": "pepito@gmail.com",
+            "password": "1234",
+            "tipo": "Cliente"
+        }
+    ]
+}
