@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "nombre": "admin",
+    "apellidos": "Admin",
+    "run": "12345678-9",
+    "correo": "admin@duoc.cl",
+    "password": "123",
+    "fechaNacimiento": "01/01/2000",
+    "telefono": "987654321",
+    "direccion": "Av. Siempre Viva 123",
+    "region": "Región Metropolitana",
+    "comuna": "Santiago",
+    "codigoReferido": "",
+    "tipo": "Administrador"
+  },
+
+  {
+    "id": 2,
+    "nombre": "Vendedor Pablito",
+    "correo": "vendedor@duoc.cl",
+    "password": "123",
+    "tipo": "Vendedor"
+  },
+  {
+    "id": 3,
+    "nombre": "Cliente Ana",
+    "correo": "cliente@gmail.com",
+    "password": "123",
+    "tipo": "Cliente"
+  }
+]

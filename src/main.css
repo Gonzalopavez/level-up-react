@@ -1,0 +1,478 @@
+/*===========================================
+Estilos Globales y Fondo de Página
+===========================================*/
+
+:root {
+  /* Define tu color morado como una variable para usarla en todas partes */
+  --neon-purple: #8A2BE2; /* Un morado estándar (puedes cambiarlo por tu #bd0bf4) */
+  --neon-purple-shadow-light: rgba(138, 43, 226, 0.5);
+  --neon-purple-shadow-heavy: rgba(138, 43, 226, 0.6);
+}
+
+body:not(.admin-page) {
+  background-color: black;
+  color: white;
+  
+  /* Empuja el contenido hacia abajo para que no se oculte detrás del Navbar fijo */
+  padding-top: 70px; 
+}
+
+/*===========================================
+Estilos Globales de Formularios (Foco Morado)
+(Esto reemplaza todas las reglas .form-control-dark)
+===========================================*/
+
+/* Borde y sombra morada para inputs de texto BLANCOS */
+.form-control:focus {
+  border-color: var(--neon-purple);
+  box-shadow: 0 0 0 0.25rem var(--neon-purple-shadow-light);
+}
+
+/* Borde y sombra morada para dropdowns BLANCOS */
+.form-select:focus {
+  border-color: var(--neon-purple);
+  box-shadow: 0 0 0 0.25rem var(--neon-purple-shadow-light);
+}
+
+/*===========================================
+Estilos del Navbar
+===========================================*/
+
+.navbar {
+  display: flex;
+  align-items: center;
+}
+
+.logogamer {
+  width: 55px;
+  height: 45px;
+  vertical-align: middle;
+}
+
+.navbar-brand {
+  font-family: 'Audiowide', sans-serif;
+  font-size: 1rem;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Texto Neón (Usado en el logo y títulos) */
+.neon-text {
+  color: #fff;
+  text-shadow:
+    0 0 5px var(--neon-purple),
+    0 0 10px var(--neon-purple),
+    0 0 15px var(--neon-purple),
+    0 0 20px var(--neon-purple);
+}
+
+/* Ancho del Buscador del Navbar */
+.navbar .form-control {
+  min-width: 300px; 
+}
+
+/* Botón de login "Iniciar Sesión" */
+.btn-login {
+  background-color: var(--neon-purple);
+  border: 2px solid var(--neon-purple);
+  color: #fff;
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.btn-login:hover {
+  background-color: #fff;
+  color: var(--neon-purple);
+  box-shadow: 0 0 10px var(--neon-purple),
+    0 0 20px var(--neon-purple);
+}
+
+.btn-login:hover i {
+  color: var(--neon-purple);
+}
+
+/* Efecto Hover (subrayado) para links del Navbar */
+.navbar-nav .nav-link {
+  position: relative;
+  transition: color 0.4s ease-out;
+  padding-bottom: 8px;
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--neon-purple);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.4s ease-out;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--neon-purple) !important;
+}
+
+.navbar-nav .nav-link:hover i {
+  color: var(--neon-purple) !important;
+}
+
+.navbar-nav .nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/*===========================================
+Estilos de Tarjetas (Producto, Blog, Equipo, etc.)
+===========================================*/
+
+/* Estilo base para Tarjeta de Producto */
+.product-card {
+  border: 1px solid var(--neon-purple);
+  box-shadow: 0 0 10px var(--neon-purple-shadow-light);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px var(--neon-purple-shadow-heavy);
+}
+
+.product-card .card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Botón Morado Genérico (Agregar, Enviar, Leer Más) */
+.btn-gamer {
+  background-color: var(--neon-purple);
+  border: none;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.btn-gamer:hover {
+  background-color: #9a00c9; /* Un morado más oscuro */
+}
+
+/* Estilos para "Por Qué Elegirnos" (Feature Cards) */
+.feature-card {
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  padding: 30px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease-in-out;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 
+              0 0 20px var(--neon-purple-shadow-heavy);
+  border-color: var(--neon-purple);
+}
+
+.feature-card .text-neon {
+  color: var(--neon-purple) !important;
+  text-shadow: 0 0 5px var(--neon-purple-shadow-light);
+}
+
+/* Estilos para Página "Nosotros" */
+.mission-vision-card {
+  background-color: #111;
+  border: 2px solid var(--neon-purple);
+  border-radius: 10px;
+  padding: 20px;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.mission-vision-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px var(--neon-purple-shadow-light);
+}
+
+.team-card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  align-items: center;
+  transition: all 0.3s ease;
+  color: #ccc;
+}
+
+.team-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  border-color: var(--neon-purple);
+}
+
+.team-card .card-img-top {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 4px solid var(--neon-purple);
+}
+
+/* Estilos para Página "Blog" */
+.blog-card {
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  border: 1px solid #333;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  min-height: 280px;
+}
+
+.blog-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 
+              0 0 20px var(--neon-purple-shadow-heavy);
+  border-color: var(--neon-purple);
+}
+
+.blog-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-card .card-body {
+  flex-basis: 60%;
+}
+
+.blog-card .col-md-5 {
+  flex-basis: 40%;
+}
+
+.blog-quote {
+  border-left: 5px solid var(--neon-purple);
+  padding-left: 20px;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #eee;
+}
+
+/*===========================================
+Estilos de Paneles (Login, Carrito, Modal, Contacto)
+===========================================*/
+
+/* Offcanvas de Login */
+.offcanvas-login-custom {
+  background-color: #111111;
+  border-left: 3px solid #ffffff !important;
+  color: white;
+  box-shadow: 0 0 20px 5px var(--neon-purple);
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+
+.offcanvas-login-custom .btn-close {
+  filter: invert(1);
+  opacity: 1;
+}
+
+.offcanvas-login-custom .titulo-canvas,
+.offcanvas-login-custom .form-label-canvas-correo,
+.offcanvas-login-custom .form-label-canvas-contraseña,
+.offcanvas-login-custom .form-check-label,
+.offcanvas-login-custom .text-center-no-tiene-cuenta {
+  color: white;
+}
+
+.offcanvas-login-custom .btn-primary-Entrar {
+  background-color: var(--neon-purple);
+  color: white;
+  border-radius: 50px;
+}
+
+.offcanvas-login-custom .btn-primary-Entrar:hover {
+  background-color: #9a0cc5;
+  color: white;
+}
+
+/* Modal Genérico (Usado en Admin CRUD) */
+.modal-backdrop {
+  opacity: 0.9 !important;
+}
+
+.modal-content {
+  border: 2px solid var(--neon-purple);
+  box-shadow: 0 0 25px var(--neon-purple-shadow-heavy);
+}
+
+/* Contenedor Formulario de Contacto */
+.contact-form-container {
+  background-color: #111;
+  border-radius: 15px;
+  border: 2px solid var(--neon-purple);
+  box-shadow: 0 0 25px var(--neon-purple-shadow-light); 
+  transition: all 0.3s ease;
+}
+
+.contact-form-container:hover {
+  box-shadow: 0 0 40px var(--neon-purple-shadow-heavy);
+}
+
+.contact-form-container .form-label {
+  color: #f8f9fa;
+}
+
+/*===========================================
+Estilos de Contenido (Carrusel, Testimonios, Marcas, Footer)
+(Guardados para uso futuro)
+===========================================*/
+
+/* Carrusel */
+#heroCarousel {
+  position: relative;
+}
+
+.carousel-item {
+  height: 90vh;
+  min-height: 400px;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-caption-button {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+}
+
+#heroCarousel .btn-gamer {
+  opacity: 1;
+  padding: 8px 16px;
+  font-size: 1rem;
+  transition: opacity 0.3s ease;
+}
+
+/* Testimonios (Para después) */
+.testimonial-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid var(--neon-purple);
+  object-fit: cover;
+}
+
+.testimonial-text {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.testimonial-author {
+  color: var(--neon-purple);
+  font-weight: bold;
+}
+
+.testimonial-meta {
+  font-size: 0.9rem;
+  color: #adb5bd;
+}
+
+/* Marcas (Para después) */
+.brand-logo {
+  height: 40px;
+  filter: grayscale(100%) opacity(0.6);
+  transition: all 0.3s ease;
+}
+
+.brand-logo:hover {
+  filter: grayscale(0%) opacity(1);
+}
+
+/* Footer (Para después) */
+.footer-link {
+  color: #ccc;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+  color: var(--neon-purple);
+  padding-left: 5px;
+}
+
+.btn-floating {
+  transition: all 0.3s ease;
+}
+
+.btn-floating:hover {
+  transform: translateY(-3px);
+  color: var(--neon-purple) !important;
+}
+
+/* Separador Neón */
+.neon-divider {
+  border: 0;
+  height: 2px;
+  background-color: #fff;
+  box-shadow: 0 0 20px 7px var(--neon-purple-shadow-heavy);
+}
+
+
+/* --- Estilos para la Página de Checkout --- */
+.checkout-container {
+  background-color: #111;
+  border-radius: 15px;
+  border: 2px solid var(--neon-purple, #8A2BE2);
+  box-shadow: 0 0 25px var(--neon-purple-shadow-light, rgba(138, 43, 226, 0.5)); 
+}
+
+/* Estilos para el resumen del pedido en checkout */
+.checkout-container .list-group-item {
+  border-color: #333; /* Línea separadora más sutil */
+}
+
+
+/* --- Estilos para Pestañas (Vendedor/Admin) --- */
+.nav-gamer .nav-link {
+  background-color: var(--neon-purple, #8A2BE2); /* Color morado */
+  color: #fff;
+  border-radius: 5px;
+  margin: 0 5px; /* Pequeño espacio entre botones */
+  font-weight: bold;
+  transition: all 0.3s ease;
+  
+  /* Botón inactivo: un poco transparente */
+  opacity: 0.7; 
+}
+
+/* Estilo al pasar el cursor (hover) */
+.nav-gamer .nav-link:hover {
+  opacity: 0.9;
+  background-color: var(--neon-purple, #8A2BE2); /* Mantiene color */
+  color: #fff;
+}
+
+/* Estilo para la pestaña ACTIVA */
+.nav-gamer .nav-link.active {
+  opacity: 1; /* 100% opaco */
+  background-color: var(--neon-purple, #8A2BE2);
+  color: #fff;
+  /* Añadimos el brillo neón solo al activo */
+  box-shadow: 0 0 15px var(--neon-purple-shadow-light, rgba(138, 43, 226, 0.6));
+}

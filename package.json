@@ -11,9 +11,14 @@
     "json-server": "json-server --watch db.json --port 3001"
   },
   "dependencies": {
+    "@sweetalert2/theme-dark": "^5.0.27",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "json-server": "^1.0.0-beta.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.5",
+    "sweetalert2": "^11.26.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

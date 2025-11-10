@@ -1,0 +1,56 @@
+/* src/App.css */
+
+/* --- Estilos para la Sección "Por Qué Elegirnos" (Feature Cards) --- */
+.feature-card {
+  background-color: #1a1a1a; /* Fondo oscuro */
+  border-radius: 10px;       /* Bordes redondeados */
+  padding: 30px;             /* Espaciado interno */
+  min-height: 250px;         /* Altura mínima para que sean uniformes */
+  display: flex;             /* Para centrar contenido verticalmente */
+  flex-direction: column;    /* Contenido apilado */
+  justify-content: center;   /* Centrado vertical */
+  align-items: center;       /* Centrado horizontal */
+  
+  /* Sombra inicial y transición para el efecto hover */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+  transition: all 0.3s ease-in-out;        /* Transición suave */
+  
+  /* Borde neón inicial (apenas visible) */
+  border: 1px solid rgba(138, 43, 226, 0.2); /* Morado muy tenue */
+}
+
+.feature-card:hover {
+  /* Efecto de elevación */
+  transform: translateY(-10px); /* Sube 10px */
+  
+  /* Sombra más pronunciada al hacer hover */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 
+              0 0 20px rgba(138, 43, 226, 0.6); /* Sombra y resplandor neón */
+  
+  /* Borde neón más brillante al hacer hover */
+  border: 1px solid rgba(138, 43, 226, 0.8); /* Morado más brillante */
+}
+
+/* Ajustes para el texto dentro de las feature-card si es necesario */
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: #bbb;
+}
+
+/* Asegurarse de que el color neón se vea bien en los iconos */
+.feature-card .text-neon {
+  color: var(--neon-purple-dark) !important; /* Usar tu variable CSS si tienes una, o un color directo */
+  /* Puedes añadir una sombra de texto para que el ícono brille más */
+  text-shadow: 0 0 5px rgba(138, 43, 226, 0.7);
+}
+
+/* Si tu --neon-purple-dark no está definido, define un color aquí */
+/* :root {
+  --neon-purple-dark: #8A2BE2; 
+  --neon-purple-light: #C37FFF;
+} */

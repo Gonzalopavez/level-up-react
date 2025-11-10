@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "nombre": "Mouse Gamer Pro X",
+    "precio": 45000,
+    "categoria": "Periféricos",
+    "descripcion": "Mouse óptico de alta precisión con 16000 DPI y luces RGB.",
+    "imagen": "img/productos/mouse.jpg",
+    "stock": 50
+  },
+  {
+    "id": 2,
+    "nombre": "Teclado Mecánico K-800",
+    "precio": 79990, 
+    "categoria": "Periféricos",
+    "descripcion": "Teclado mecánico con switches rojos, retroiluminación y layout en español.",
+    "imagen": "img/productos/teclado.jpg",
+    "stock": 30
+  },
+  {
+    "id": 3,
+    "nombre": "Monitor Curvo 27\" 144Hz",
+    "precio": 210000,
+    "categoria": "Monitores",
+    "descripcion": "Monitor curvo para una inmersión total, 1ms de respuesta.",
+    "imagen": "img/productos/monitor.webp",
+    "stock": 15
+  }
+]
