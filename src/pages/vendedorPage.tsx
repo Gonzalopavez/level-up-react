@@ -11,7 +11,7 @@ export const VendedorPage: React.FC = () => {
         Gestiona el inventario y revisa el historial de ventas.
       </p>
 
-      {/* --- Pestañas de Navegación (¡AQUÍ ESTÁ EL CAMBIO!) --- */}
+      {/* --- Pestañas de Navegación  --- */}
       {/* Cambiamos 'nav-tabs' por 'nav-pills' y añadimos 'nav-gamer' y 'mb-3' */}
       <ul className="nav nav-pills nav-fill nav-gamer mb-3" id="vendedorTab" role="tablist">
         <li className="nav-item" role="presentation">

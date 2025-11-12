@@ -43,6 +43,8 @@ export const getProductoById = async (id: number): Promise<IProducto | undefined
     const productos = await getProductos();
     return productos.find(producto => producto.id === id);
 
+
+    
   } catch (error) {
     console.error("Error al obtener el producto:", error);
     return undefined;

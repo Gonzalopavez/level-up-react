@@ -1,27 +1,25 @@
 
 
-// src/components/productCard.tsx
 
 import React from 'react';
-// 1. ¡¡IMPORTAMOS SWEETALERT!!
 import Swal from 'sweetalert2'; 
-
 import type { IProducto } from '../models/producto-model';
 import { useCart } from '../hooks/useCart';
 import { formatearPrecio } from '../utils/formatters';
+
+
 
 interface Props {
   producto: IProducto;
 }
 
-// El componente DEBE empezar con Mayúscula (ProductCard)
 export const ProductCard: React.FC<Props> = ({ producto }) => {
   
   const { addToCart } = useCart();
 
-  // 2. ¡ACTUALIZAMOS LA FUNCIÓN 'handleAddToCart'!
+  // FUNCIÓN 'handleAddToCart'!
   const handleAddToCart = () => {
-    // a) Primero, añadimos el producto al "cerebro" (como antes)
+    // a) Primero, añadimos el producto al "cerebro" 
     addToCart(producto);
     
     // b) Segundo, disparamos la alerta "toast"
@@ -30,7 +28,7 @@ export const ProductCard: React.FC<Props> = ({ producto }) => {
       position: 'top', // <-- "arriba de la pagina al medio"
       icon: 'success',
       title: `${producto.nombre} se agregó a tu carrito`,
-      showConfirmButton: false, // No queremos un botón de "OK"
+      showConfirmButton: false, 
       timer: 2000, // Se cierra sola después de 2 segundos
       timerProgressBar: true, // Muestra una barrita de tiempo
       // (No necesitamos 'background' o 'color' porque importamos el 'theme-dark')

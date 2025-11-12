@@ -3,6 +3,8 @@ import React from 'react';
 
 // Sin 'props' aquí, porque el footer es siempre
 // el mismo. Es un componente estático.
+
+
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-dark text-white mt-5 p-4 text-center">

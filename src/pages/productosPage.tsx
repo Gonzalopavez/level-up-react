@@ -1,5 +1,4 @@
 
-// src/pages/productosPage.tsx
 
 import React, { useState, useEffect } from 'react';
 import type { IProducto } from '../models/producto-model';
@@ -67,8 +66,7 @@ export const ProductosPage: React.FC = () => {
         </div>
       </div>
       
-      {/* --- ¡AQUÍ ESTÁ EL CAMBIO! --- */}
-      {/* Añadimos 'mt-5' (margin-top 5) para dar más espacio */}
+
       <div className="row mt-5">
         
         {productos.length === 0 && (

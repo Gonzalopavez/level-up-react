@@ -12,7 +12,7 @@ function App() {
     <>
       <Navbar />
 
-      {/* ✅ Los Offcanvas SIEMPRE deben ir aquí, fuera del <main> */}
+      {/* Offcanvas SIEMPRE deben ir aquí, fuera del <main> */}
       <LoginModal />
       <CartOffcanvas />
 

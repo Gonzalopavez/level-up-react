@@ -1,14 +1,13 @@
-// src/components/heroCarousel.tsx
+
+
 import React from 'react';
 // 1. Importamos NavLink para los links internos (como "/nosotros")
 import { NavLink } from 'react-router-dom';
 
-// --- ESTA ES LA REGLA DE REACT ---
-// El componente DEBE empezar con Mayúscula (HeroCarousel)
-// aunque el archivo se llame 'heroCarousel.tsx' (con minúscula)
+
 export const HeroCarousel: React.FC = () => {
 
-  // 2. ACTUALIZAMOS LA "BASE DE DATOS" DEL CARRUSEL
+  //    ACTUALIZAMOS LA "BASE DE DATOS" DEL CARRUSEL
   //    Ahora cada slide tiene su propio botón y link
   const banners = [
     { 
@@ -34,11 +33,13 @@ export const HeroCarousel: React.FC = () => {
     },
   ];
 
-  // 3. FUNCIÓN INTELIGENTE PARA CREAR EL BOTÓN
+
+
+
+  //    FUNCIÓN INTELIGENTE PARA CREAR EL BOTÓN
   //    Esta función decide qué etiqueta HTML usar (<a> o <NavLink>)
   const renderButton = (banner: typeof banners[0]) => {
     
-    // Usamos tu clase "btn-gamer" para el color morado
     const className = "btn btn-gamer btn-lg"; 
     
     switch (banner.linkType) {
@@ -60,7 +61,6 @@ export const HeroCarousel: React.FC = () => {
   };
 
   return (
-    // Usamos tu 'id' original para que tu CSS lo reconozca
     <div id="heroCarousel" className="carousel slide" data-bs-ride="carousel">
       
       {/* Indicadores (los 3 puntitos de abajo) */}
@@ -74,18 +74,13 @@ export const HeroCarousel: React.FC = () => {
         {banners.map((banner, index) => (
           <div 
             key={index}
-            // Tu CSS original usa .carousel-item para darle altura
             className={`carousel-item ${index === 0 ? 'active' : ''}`}
           >
             <img 
               src={banner.img} 
-              // Tu CSS original usa .carousel-image
               className="d-block w-100 carousel-image" 
               alt={banner.alt} 
             />
-            {/* 4. AÑADIMOS EL BOTÓN
-                Usamos tu clase original 'carousel-caption-button' para posicionarlo
-            */}
             <div className="carousel-caption d-none d-md-block carousel-caption-button">
               {renderButton(banner)}
             </div>

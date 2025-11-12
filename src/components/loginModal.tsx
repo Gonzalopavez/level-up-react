@@ -1,4 +1,4 @@
-// src/components/loginModal.tsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -13,8 +13,8 @@ export const LoginModal: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      
-      // --- ¡¡ARREGLO!! ---
+
+
       // Llamamos a 'login' con UN solo objeto, como el "Cerebro" espera
       const result = await login({ email: email, password: password });
 
@@ -29,7 +29,7 @@ export const LoginModal: React.FC = () => {
         setPassword('');
         navigate('/');
       } else {
-        // Usamos el mensaje de error del "Camarero"
+        // Usamos el mensaje de error 
         Swal.fire({ icon: 'error', title: 'Error', text: result.mensaje });
       }
     } catch (error) {
@@ -63,7 +63,6 @@ export const LoginModal: React.FC = () => {
       </div>
       <div className="offcanvas-body">
         <form onSubmit={handleSubmit}>
-          {/* ... (Campos no cambian) ... */}
           <div className="mb-3">
             <label htmlFor="loginEmail" className="form-label-canvas-correo">Correo Electrónico</label>
             <input type="email" className="form-control" id="loginEmail" value={email} onChange={(e) => setEmail(e.target.value)} required />

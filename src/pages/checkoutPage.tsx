@@ -1,4 +1,3 @@
-// src/pages/checkoutPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -38,7 +37,7 @@ export const CheckoutPage: React.FC = () => {
         ...prev,
         nombre: currentUser.nombre,
         apellidos: currentUser.apellidos,
-        // (Podríamos añadir los otros campos a IUsuario si quisiéramos auto-rellenar todo)
+        
       }));
     }
   }, [currentUser]);
@@ -62,7 +61,6 @@ export const CheckoutPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // (Aquí iría la validación del formulario de envío, si quieres añadirla)
 
     // Simulación de pago
     Swal.fire({

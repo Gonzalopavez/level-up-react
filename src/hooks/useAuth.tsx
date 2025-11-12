@@ -1,8 +1,7 @@
-// src/hooks/useAuth.tsx
+
+
 import React, { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import type { IUsuario, ILoginCredentials } from "../models/usuario-model";
-
-// --- ¡¡ARREGLO 1!! ---
 // Importamos el "molde" Y la función (con un alias)
 import { 
   login as loginService, // <-- Importamos la función como "loginService"
@@ -12,7 +11,6 @@ import {
 // "Molde" del Cerebro
 interface AuthContextType {
   currentUser: IUsuario | null;
-  // --- ¡¡ARREGLO 2!! ---
   // La función login ahora espera UN objeto (credentials)
   login: (credentials: ILoginCredentials) => Promise<LoginResult>; 
   logout: () => void;
@@ -35,11 +33,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // La Lógica: Función de Login
+  // Función de Login
   const login = async (credentials: ILoginCredentials): Promise<LoginResult> => {
     
-    // --- ¡¡ARREGLO 3!! ---
-    // Llamamos a la función "loginService" que importamos
+    // Llamamos a la función "loginService" 
     const result = await loginService(credentials);
 
     if (result.ok && result.usuario) {
@@ -68,7 +65,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// El "Enchufe" (no cambia)
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

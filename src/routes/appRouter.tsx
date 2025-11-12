@@ -1,4 +1,3 @@
-// src/routes/appRouter.tsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "../App";
 
@@ -13,7 +12,7 @@ import { BlogPostSonido71Page } from "../pages/blogPostSonido71Page";
 import { RegistroPage } from "../pages/registroPage";
 import { CheckoutPage } from "../pages/checkoutPage";
 
-// ✅ Páginas Vendedor
+// Páginas Vendedor
 import { VendedorPage } from "../pages/vendedorPage";
 import { GestionStockVendedor } from "../components/vendedor/gestionStockVendedor";
 import { VerVentas } from "../components/vendedor/verVentas";
@@ -27,7 +26,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      // ✅ Rutas públicas
+      // Rutas públicas
       { path: "/", element: <HomePage /> },
       { path: "/productos", element: <ProductosPage /> },
       { path: "/nosotros", element: <NosotrosPage /> },
@@ -41,10 +40,10 @@ const router = createBrowserRouter([
       // Registro
       { path: "/registro", element: <RegistroPage /> },
 
-      // ✅ Checkout del carrito
+      //  Checkout del carrito
       { path: "/carrito", element: <CheckoutPage /> },
 
-      // ✅ ✅ ✅ RUTAS PROTEGIDAS PARA VENDEDORES
+      //RUTAS PROTEGIDAS PARA VENDEDORES
       {
         element: <ProtectedRoute allowedRoles={["Vendedor"]} />,
         children: [
@@ -54,7 +53,7 @@ const router = createBrowserRouter([
         ],
       },
 
-      // ✅ ✅ ✅ RUTAS PROTEGIDAS PARA ADMIN
+      //RUTAS PROTEGIDAS PARA ADMIN
       {
         element: <ProtectedRoute allowedRoles={["Administrador"]} />,
         children: [

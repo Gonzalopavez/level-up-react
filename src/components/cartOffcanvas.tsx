@@ -1,4 +1,4 @@
-// src/components/cartOffcanvas.tsx
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart'; // <-- El "cerebro"
@@ -7,7 +7,7 @@ import { formatearPrecio } from '../utils/formatters';
 
 export const CartOffcanvas: React.FC = () => {
 
-  // ¡¡CAMBIO!! Ahora "sacamos" 'totalPedido' directamente del "cerebro"
+  //"sacamos" 'totalPedido' directamente del "cerebro"
   const { 
     cartItems, 
     removeFromCart, 
@@ -19,8 +19,7 @@ export const CartOffcanvas: React.FC = () => {
   
   const navigate = useNavigate();
 
-  // YA NO NECESITAMOS ESTA LÍNEA:
-  // const totalPedido = cartItems.reduce(...);
+  
 
   const handleGoToCheckout = () => {
     const modalElement = document.getElementById('offcanvasCarrito');
@@ -55,7 +54,6 @@ export const CartOffcanvas: React.FC = () => {
           </div>
         ) : (
           <div>
-            {/* ... (El .map() de los items no cambia) ... */}
             {cartItems.map(item => (
               <div key={item.producto.id}>
                 <div className="d-flex mb-3">

@@ -1,8 +1,6 @@
-// src/pages/blogPostSonido71Page.tsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-// El componente DEBE empezar con Mayúscula
 export const BlogPostSonido71Page: React.FC = () => {
   return (
     <div className="container mt-5">
@@ -13,7 +11,7 @@ export const BlogPostSonido71Page: React.FC = () => {
           <header className="text-center mb-4">
             <h1 className="text-neon mb-3" style={{ fontSize: '2.8rem' }}>
               El Sonido 7.1: ¿Marketing o Ventaja Real en Shooters?
-            </h1>
+            </h1> 
             <p className="text-secondary">
               Publicado el 25 de Septiembre, 2025 | por Level-Up Gamer
             </p>
@@ -25,7 +23,7 @@ export const BlogPostSonido71Page: React.FC = () => {
               Todos los audífonos gamer prometen sonido envolvente, pero ¿realmente te ayuda a escuchar los pasos de tus enemigos con precisión? Probamos los últimos modelos y te explicamos la ciencia detrás del audio posicional para que sepas si es una inversión que vale la pena.
             </p>
             
-            {/* Puedes añadir una imagen aquí si quieres */}
+            {/*  añadir una imagen aquí*/}
             {/* <img 
               src="/img/blog/sonido71-post.jpg"
               className="img-fluid rounded my-4" 

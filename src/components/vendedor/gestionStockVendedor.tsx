@@ -1,4 +1,6 @@
-/// src/components/vendedor/GestionStockVendedor.tsx
+
+
+
 import React, { useState, useEffect } from 'react';
 import type { IProducto } from '../../models/producto-model';
 import { getProductos } from '../../services/producto-service';
@@ -11,11 +13,10 @@ export const GestionStockVendedor: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [productoSeleccionado, setProductoSeleccionado] = useState<IProducto | null>(null);
-  
-  // --- CAMBIO 1: El estado ahora guarda STRINGS ---
-  // Esto permite que el input esté vacío ("") en lugar de forzar un 0
   const [nuevoStock, setNuevoStock] = useState("0");
   const [nuevoPrecio, setNuevoPrecio] = useState("0");
+
+
 
   useEffect(() => {
     const cargarProductos = async () => {
@@ -36,7 +37,7 @@ export const GestionStockVendedor: React.FC = () => {
   const handleAbrirModal = (producto: IProducto) => {
     setProductoSeleccionado(producto);
     
-    // --- CAMBIO 2: Convertimos los números a STRING al abrir ---
+    // --- Convertimos los números a STRING al abrir ---
     setNuevoStock(producto.stock.toString());
     setNuevoPrecio(producto.precio.toString());
     
@@ -47,7 +48,7 @@ export const GestionStockVendedor: React.FC = () => {
   const handleGuardarCambios = () => {
     if (!productoSeleccionado) return;
 
-    // --- CAMBIO 3: Convertimos los STRINGS a NÚMERO al guardar ---
+    // ---Convertimos los STRINGS a NÚMERO al guardar ---
     // Usamos '|| 0' por si el vendedor dejó el campo vacío (string vacío)
     const stockFinal = Number(nuevoStock) || 0;
     const precioFinal = Number(nuevoPrecio) || 0;
@@ -67,13 +68,12 @@ export const GestionStockVendedor: React.FC = () => {
     setProductoSeleccionado(null);
   };
 
-  // --- CAMBIO 4: Nueva función "inteligente" para el onChange ---
+  // -- Nueva función "inteligente" para el onChange ---
   // Esta función solo permite dígitos (0-9) y el string vacío
   // Bloquea letras, puntos, y el signo "-" (negativo)
   const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<string>>) => {
     const valor = e.target.value;
     
-    // Regex: /^\d*$/  (Solo permite dígitos o un string vacío)
     if (/^\d*$/.test(valor)) {
       setter(valor);
     }
@@ -86,10 +86,9 @@ export const GestionStockVendedor: React.FC = () => {
     <div>
       <h3 className="text-neon mb-3">Gestión de Stock y Precios</h3>
       
-      {/* ... (La tabla no cambia) ... */}
+      
       <div className="table-responsive">
         <table className="table table-dark table-striped table-hover">
-          {/* ... (thead no cambia) ... */}
           <thead>
              <tr>
               <th>ID</th>
@@ -137,7 +136,7 @@ export const GestionStockVendedor: React.FC = () => {
             </div>
             <div className="modal-body">
               
-              {/* --- INPUTS CORREGIDOS --- */}
+            
               <div className="mb-3">
                 <label htmlFor="nuevoPrecio" className="form-label">Nuevo Precio (CLP)</label>
                 <input 
@@ -146,14 +145,14 @@ export const GestionStockVendedor: React.FC = () => {
                   className="form-control" 
                   id="nuevoPrecio"
                   value={nuevoPrecio}
-                  onChange={(e) => handleNumericChange(e, setNuevoPrecio)} // <-- Usa el handler "inteligente"
+                  onChange={(e) => handleNumericChange(e, setNuevoPrecio)} 
                 />
               </div>
               <div className="mb-3">
                 <label htmlFor="nuevoStock" className="form-label">Nuevo Stock (Unidades)</label>
                 <input 
-                  type="text" // <-- Cambiado de 'number' a 'text' (elimina flechas)
-                  inputMode="numeric" // <-- Muestra teclado numérico en móviles
+                  type="text" 
+                  inputMode="numeric" 
                   className="form-control" 
                   id="nuevoStock"
                   value={nuevoStock}

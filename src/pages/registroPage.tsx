@@ -1,4 +1,3 @@
-// src/pages/registroPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -6,7 +5,7 @@ import type { IUsuario } from '../models/usuario-model';
 import { register } from '../services/auth-service'; 
 import { useAuth } from '../hooks/useAuth';
 
-// --- Validaciones (No cambian) ---
+// --- Validaciones ---
 const regionesYComunas = [
     { nombre: "Región Metropolitana", comunas: ["Santiago", "Providencia", "Las Condes"] },
     { nombre: "Valparaíso", comunas: ["Valparaíso", "Viña del Mar", "Quilpué"] },
@@ -124,17 +123,13 @@ export const RegistroPage: React.FC = () => {
     }
   };
 
-  // --- FUNCIÓN ARREGLADA ---
   const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target as { name: keyof typeof formData; value: string };
     let error: string | null = null;
     
     if (name === 'confirmPassword') {
-      // Caso especial (2 argumentos)
       error = validators.confirmPassword(value, formData.password);
     } else if (name in validators) {
-      // --- ¡¡AQUÍ ESTÁ EL ARREGLO!! ---
-      // Le decimos a TypeScript que esta función SÓLO toma 1 argumento
       const validator = validators[name] as (val: string) => string | null;
       error = validator(value);
     }
@@ -145,26 +140,19 @@ export const RegistroPage: React.FC = () => {
   const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value, comuna: '' }));
-    
-    // Validamos 'region' manualmente
     setErrors(prev => ({ ...prev, [name]: validators[name as 'region'](value) }));
   };
   
-  // --- FUNCIÓN ARREGLADA ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const validationErrors: Record<string, string | null> = {};
     Object.keys(formData).forEach(key => {
       const name = key as keyof typeof formData;
-
       if (name === 'confirmPassword') {
-        // Caso especial (2 argumentos)
         validationErrors[name] = validators.confirmPassword(formData[name], formData.password);
       } else if (name in validators) {
-        // --- ¡¡AQUÍ ESTÁ EL ARREGLO!! ---
-        // Hacemos lo mismo que en handleBlur
-        const validator = validators[name] as (val: string) => string | null;
+        const validator = validators[name]as (val: string) => string | null;
         validationErrors[name] = validator(formData[name]);
       }
     });
@@ -207,8 +195,10 @@ export const RegistroPage: React.FC = () => {
           text: 'Tu cuenta ha sido creada.'
       });
       
-      // Auto-login (corregido para 2 argumentos)
-      await autoLogin(nuevoUsuario.correo, nuevoUsuario.password);
+      // --- ¡¡AQUÍ ESTÁ EL ARREGLO!! ---
+      // El error 'ts(2554)' decía que esperaba 1 argumento (un objeto).
+      // Se lo pasamos como un objeto.
+      await autoLogin({ email: nuevoUsuario.correo, password: nuevoUsuario.password });
       
       navigate('/');
 

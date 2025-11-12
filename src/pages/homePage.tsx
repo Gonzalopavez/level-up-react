@@ -1,4 +1,3 @@
-// src/pages/homePage.tsx
 import React, { useState, useEffect } from 'react';
 
 import { HeroCarousel } from '../components/heroCarousel';
@@ -48,7 +47,7 @@ export const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* 2. NUEVA SECCIÓN: "Por Qué Elegirnos" */}
+        {/* SECCIÓN: "Por Qué Elegirnos" */}
         <section id="why-choose-us" className="my-5 py-5">
           <h2 className="text-center text-neon mb-5">¿POR QUÉ ELEGIRNOS?</h2>
           <div className="row">
@@ -75,7 +74,7 @@ export const HomePage: React.FC = () => {
         {/* Fin de la Nueva Sección */}
 
 
-        {/* (Aquí irán tus otras secciones: "Testimonios", "Marcas", etc.) */}
+        
 
       </div>
     </div>

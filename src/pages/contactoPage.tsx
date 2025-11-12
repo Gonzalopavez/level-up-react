@@ -1,12 +1,8 @@
-// src/pages/productosPage.tsx
 
-// src/pages/contactoPage.tsx
 import React, { useState } from 'react';
 import Swal from 'sweetalert2'; 
 
-// --- ¡¡AQUÍ ESTÁ EL ARREGLO!! ---
-// Esta línea EXPORTA el componente con el nombre 'ContactoPage' (con 'C' mayúscula)
-// que es el nombre que 'appRouter' está buscando.
+
 export const ContactoPage: React.FC = () => {
 
   const [nombre, setNombre] = useState('');

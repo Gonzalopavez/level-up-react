@@ -1,12 +1,10 @@
-// src/pages/nosotrosPage.tsx
 import React from 'react';
 
-// El componente DEBE empezar con Mayúscula (NosotrosPage)
 export const NosotrosPage: React.FC = () => {
   return (
     <div className="container mt-5">
 
-      {/* --- 1. SECCIÓN "NUESTRA PARTIDA" --- */}
+      {/* ---"NUESTRA PARTIDA" --- */}
       <section className="text-center mb-5">
         <h1 className="text-neon mb-3">Nuestra Partida</h1>
         <p className="lead" style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -16,7 +14,7 @@ export const NosotrosPage: React.FC = () => {
 
       <hr className="neon-divider my-5" />
 
-      {/* --- 2. SECCIÓN "MISIÓN Y VISIÓN" --- */}
+      {/* ---  "MISIÓN Y VISIÓN" --- */}
       <section className="mb-5">
         <div className="row">
           
@@ -59,7 +57,6 @@ export const NosotrosPage: React.FC = () => {
           {/* Tarjeta de Gonzalo */}
           <div className="col-lg-5 col-md-6 mb-4">
             <div className="card team-card h-100 p-4">
-              {/* Asegúrate de tener esta imagen en 'public/img/team/gonzalo.jpg' */}
               <img 
                 src="/img/desarrolladores/gonzalo.jpg" 
                 className="card-img-top rounded-circle mb-3" 
@@ -77,7 +74,6 @@ export const NosotrosPage: React.FC = () => {
           {/* Tarjeta de David */}
           <div className="col-lg-5 col-md-6 mb-4">
             <div className="card team-card h-100 p-4">
-              {/* Asegúrate de tener esta imagen en 'public/img/team/david.jpg' */}
               <img 
                 src="/img/desarrolladores/david.jpg" 
                 className="card-img-top rounded-circle mb-3" 

@@ -2,11 +2,10 @@
 
 
 
-// src/models/usuario-model.ts
 
 /**
  * @interface ILoginCredentials
- * @description El "molde" de lo que se necesita para el login
+ * @description 
  */
 export interface ILoginCredentials {
   email: string;

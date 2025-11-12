@@ -1,11 +1,9 @@
-// src/services/auth-service.ts
 import type { IUsuario, ILoginCredentials } from "../models/usuario-model";
 
 const USUARIOS_DB_URL = '/data/usuarios.json';
 const LOCAL_STORAGE_KEY = 'usuarios';
 
-// --- ¡¡AQUÍ ESTÁ EL MOLDE QUE FALTABA!! ---
-// Este es el "molde" que el "Cerebro" (useAuth) estaba buscando
+// Este es el "molde" que el "Cerebro" (useAuth) esta buscando
 export interface LoginResult {
   ok: boolean;
   usuario: IUsuario | null;
@@ -18,7 +16,7 @@ export interface LoginResult {
  */
 export const login = async (credentials: ILoginCredentials): Promise<LoginResult> => {
   try {
-    // 1. Buscamos en el JSON (Base de datos simulada)
+    //  Buscamos en el JSON (Base de datos simulada)
     const response = await fetch(USUARIOS_DB_URL);
     if (!response.ok) throw new Error("No se encontró usuarios.json");
     
@@ -31,7 +29,7 @@ export const login = async (credentials: ILoginCredentials): Promise<LoginResult
       return { ok: true, usuario: userSimulado, mensaje: 'Login exitoso (JSON)' };
     }
 
-    // 2. Buscamos en localStorage (Usuarios registrados)
+    //  Buscamos en localStorage (Usuarios registrados)
     const usuariosRegistrados: IUsuario[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
     const userRegistrado = usuariosRegistrados.find(
       u => u.correo === credentials.email && u.password === credentials.password
@@ -41,7 +39,7 @@ export const login = async (credentials: ILoginCredentials): Promise<LoginResult
       return { ok: true, usuario: userRegistrado, mensaje: 'Login exitoso (localStorage)' };
     }
 
-    // 3. Si no se encuentra en ninguno
+    //  Si no se encuentra en ninguno
     return { ok: false, usuario: null, mensaje: 'Credenciales incorrectas' };
 
   } catch (error) {
@@ -52,7 +50,7 @@ export const login = async (credentials: ILoginCredentials): Promise<LoginResult
 
 /**
  * @function register
- * (Esta función no cambia)
+ * 
  */
 export const register = (nuevoUsuario: IUsuario): { success: boolean, message: string } => {
   try {

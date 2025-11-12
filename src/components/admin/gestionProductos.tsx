@@ -84,6 +84,15 @@ export const GestionProductos: React.FC = () => {
     }
   };
 
+
+
+
+
+
+
+
+
+
   // Función para manejar los cambios en el formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -97,11 +106,16 @@ export const GestionProductos: React.FC = () => {
     }));
   };
 
+
+
   // Función para guardar (Crear o Actualizar)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // Evita que la página se recargue
 
     if (productoAEditar) {
+
+
+
       // --- LÓGICA DE ACTUALIZAR (UPDATE) ---
       // Reemplaza el producto viejo por el 'formData' en la lista
       setProductos(prev => 
@@ -132,7 +146,7 @@ export const GestionProductos: React.FC = () => {
 
   return (
     <div>
-      {/* 1. Botón de Agregar (Ahora vive aquí) */}
+      
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h3 className="fs-4 mb-0">Gestión de Productos</h3>
         <button 

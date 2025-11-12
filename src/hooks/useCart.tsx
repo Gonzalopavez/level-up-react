@@ -1,14 +1,14 @@
 
 
-// src/hooks/useCart.tsx
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { IProducto } from '../models/producto-model';
-
-// 1. Define el "molde" de un item en el carrito
+//Define el "molde" de un item en el carrito
 export interface ICartItem {
   producto: IProducto;
   cantidad: number;
 }
+
+
 
 // 2. Define el "molde" de lo que el "cerebro" va a compartir
 export interface CartContextType {
@@ -17,13 +17,13 @@ export interface CartContextType {
   removeFromCart: (productoId: number) => void;
   decreaseQuantity: (productoId: number) => void;
   clearCart: () => void;
-  totalPedido: number; // <-- ¡AQUÍ ESTÁ EL CAMBIO!
+  totalPedido: number; 
 }
 
-// 3. Crea el "túnel" (Context)
+// Crea el "túnel" (Context)
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// 4. Crea el "enchufe" (Hook)
+// Crea el "enchufe" (Hook)
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
@@ -32,7 +32,6 @@ export const useCart = () => {
   return context;
 };
 
-// 5. Crea el "Tablero Eléctrico" (Provider)
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   
   // "Memoria" para guardar los items
@@ -52,7 +51,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // --- ¡AQUÍ ESTÁ LA NUEVA LÓGICA! ---
+  
   // Calculamos el total.
   // 'useMemo' es un "truco" de React para que este cálculo
   // solo se ejecute si 'cartItems' cambia (es más eficiente).
@@ -63,7 +62,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [cartItems]); // <-- Se recalcula solo si cartItems cambia
 
   
-  // --- Funciones (no cambian) ---
+
   const addToCart = (producto: IProducto) => {
     setCartItems(prevItems => {
       const itemExistente = prevItems.find(item => item.producto.id === producto.id);
@@ -108,7 +107,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     removeFromCart,
     decreaseQuantity,
     clearCart,
-    totalPedido // <-- ¡AÑADIMOS EL TOTAL AL "VALOR"!
+    totalPedido 
   };
 
   return (

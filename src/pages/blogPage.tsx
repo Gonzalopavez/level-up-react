@@ -1,9 +1,9 @@
-// src/pages/blogPage.tsx
 import React from 'react';
-// 1. Importamos el nuevo "ladrillo"
 import { BlogPostCard } from '../components/blogsPostCard';
 
-// El componente DEBE empezar con Mayúscula
+
+
+
 export const BlogPage: React.FC = () => {
   return (
     <div className="container mt-5">
@@ -12,7 +12,7 @@ export const BlogPage: React.FC = () => {
       <div className="row justify-content-center">
         <div className="col-lg-10"> {/* Hacemos la columna un poco más ancha */}
           
-          {/* 2. USAMOS EL COMPONENTE */}
+          {/* USAMOS EL COMPONENTE */}
           <BlogPostCard 
             title="¿Es la RTX 4090 la reina indiscutible? Analizamos su poder"
             snippet="La última bestia de NVIDIA llegó para romper todos los benchmarks. Pero, ¿vale la pena la inversión? Desglosamos su rendimiento..."
@@ -20,15 +20,14 @@ export const BlogPage: React.FC = () => {
             linkTo="/blogs/rtx-4090" // <-- El link que creamos en el router
           />
 
-          {/* 3. AÑADIMOS EL SEGUNDO ARTÍCULO (como en tu foto) */}
           <BlogPostCard 
             title="El Sonido 7.1: ¿Marketing o Ventaja Real en Shooters?"
             snippet="Todos los audífonos gamer prometen sonido envolvente, pero ¿realmente te ayuda a escuchar los pasos de tus enemigos? Probamos los últimos modelos..."
-            imageSrc="/img/mujer.jpg" // (Asegúrate de tener esta imagen)
-            linkTo="/blogs/sonido-7-1" // (Aún no creamos esta pág, pero podemos poner el link)
+            imageSrc="/img/mujer.jpg" 
+            linkTo="/blogs/sonido-7-1" 
           />
 
-          {/* (Puedes añadir más <BlogPostCard /> aquí) */}
+          
 
         </div>
       </div>

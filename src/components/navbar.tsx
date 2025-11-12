@@ -1,14 +1,14 @@
-// src/components/navbar.tsx
+
 import React, { useEffect } from 'react'; 
 import { NavLink, useLocation } from 'react-router-dom';
-
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
 import { useSearch } from '../hooks/useSearch';
 
+
 export const Navbar: React.FC = () => {
   
-  // Pedimos 'logout' (se usa en la línea 137)
+  // Pedimos 'logout' 
   const { currentUser, logout } = useAuth(); 
   const { cartItems } = useCart();
   const { searchTerm, setSearchTerm } = useSearch();
@@ -22,7 +22,7 @@ export const Navbar: React.FC = () => {
     }
   }, [location.pathname, setSearchTerm]);
 
-  // Pedimos 'totalItemsEnCarrito' (se usa en la línea 161)
+  // Pedimos 'totalItemsEnCarrito'
   const totalItemsEnCarrito = cartItems.reduce((total, item) => total + item.cantidad, 0);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -50,7 +50,6 @@ export const Navbar: React.FC = () => {
         <div className="collapse navbar-collapse" id="navbarPrincipal">
           
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
-            {/* ... (links no cambian) ... */}
             <li className="nav-item mx-2"><NavLink className="nav-link" aria-current="page" to="/" end><i className="bi bi-house-door-fill fs-5"></i></NavLink></li>
             <li className="nav-item mx-2"><NavLink className="nav-link" to="/productos">Productos</NavLink></li>
             <li className="nav-item mx-2"><NavLink className="nav-link" to="/nosotros">Nosotros</NavLink></li>
@@ -61,7 +60,6 @@ export const Navbar: React.FC = () => {
           {showSearchBar && (
             <form className="d-flex ms-auto" role="search" onSubmit={handleSearchSubmit}>
               
-              {/* Input con fondo blanco (sin 'form-control-dark') */}
               <input 
                 className="form-control me-2" 
                 type="search" 
@@ -99,7 +97,7 @@ export const Navbar: React.FC = () => {
                   <li><hr className="dropdown-divider" /></li>
                   
                   <li>
-                    {/* --- ¡AQUÍ SE USA 'logout'! --- */}
+                    {/* --- AQUÍ SE USA 'logout' --- */}
                     <button className="dropdown-item" onClick={logout}>
                       Cerrar Sesión
                     </button>
@@ -130,7 +128,7 @@ export const Navbar: React.FC = () => {
                 data-bs-target="#offcanvasCarrito" 
               >
                 <i className="bi bi-cart fs-4 text-neon"></i>
-                {/* --- ¡AQUÍ SE USA 'totalItemsEnCarrito'! --- */}
+                {/* --- AQUÍ SE USA 'totalItemsEnCarrito' --- */}
                 <span className="badge bg-danger ms-1">{totalItemsEnCarrito}</span>
               </a>
             </li>

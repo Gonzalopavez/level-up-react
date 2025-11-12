@@ -1,4 +1,3 @@
-// src/routes/protectedRoute.tsx
 
 import React from 'react';
 import { useAuth } from '../hooks/useAuth';
@@ -8,8 +7,7 @@ interface Props {
   allowedRoles: string[]; 
 }
 
-// ¡¡AQUÍ ESTÁ LA EXPORTACIÓN!!
-// El componente se llama 'ProtectedRoute' (con 'P' Mayúscula)
+
 export const ProtectedRoute: React.FC<Props> = ({ allowedRoles }) => {
   
   const { currentUser } = useAuth();
