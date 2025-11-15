@@ -1,28 +1,40 @@
 
-import React, { useEffect } from 'react'; 
+import React, { useEffect, useRef } from 'react'; 
 import { NavLink, useLocation } from 'react-router-dom';
+
+
+// 1. TODOS los "enchufes" (Hooks) se llaman ARRIBA y SIN CONDICIONES
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
-import { useSearch } from '../hooks/useSearch';
-
+import { useSearch } from '../hooks/useSearch'; // <-- Se llama siempre
 
 export const Navbar: React.FC = () => {
   
-  // Pedimos 'logout' 
-  const { currentUser, logout } = useAuth(); 
+  // 2. Todos los Hooks se ejecutan en el mismo orden, siempre.
+  const { currentUser, logout } = useAuth();
   const { cartItems } = useCart();
-  const { searchTerm, setSearchTerm } = useSearch();
+  const { searchTerm, setSearchTerm } = useSearch(); // <-- Se ejecuta siempre
   const location = useLocation(); 
+  const dropdownToggleRef = useRef<HTMLAnchorElement>(null);
 
+  // 3. La lógica (que no son Hooks) puede usar condicionales
   const showSearchBar = location.pathname === '/productos';
 
+  // 4. Los 'useEffect' también se llaman siempre (arriba)
   useEffect(() => {
+    // Este 'if' está DENTRO del Hook, no "envolviendo" al Hook. (Esto es legal)
     if (location.pathname !== '/productos') {
       setSearchTerm('');
     }
   }, [location.pathname, setSearchTerm]);
 
-  // Pedimos 'totalItemsEnCarrito'
+  useEffect(() => {
+    if (dropdownToggleRef.current) {
+      new (window as any).bootstrap.Dropdown(dropdownToggleRef.current);
+    }
+  }, [currentUser]); 
+
+
   const totalItemsEnCarrito = cartItems.reduce((total, item) => total + item.cantidad, 0);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -50,6 +62,7 @@ export const Navbar: React.FC = () => {
         <div className="collapse navbar-collapse" id="navbarPrincipal">
           
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
+            {/* ... (links no cambian) ... */}
             <li className="nav-item mx-2"><NavLink className="nav-link" aria-current="page" to="/" end><i className="bi bi-house-door-fill fs-5"></i></NavLink></li>
             <li className="nav-item mx-2"><NavLink className="nav-link" to="/productos">Productos</NavLink></li>
             <li className="nav-item mx-2"><NavLink className="nav-link" to="/nosotros">Nosotros</NavLink></li>
@@ -57,9 +70,9 @@ export const Navbar: React.FC = () => {
             <li className="nav-item mx-2"><NavLink className="nav-link" to="/contacto">Contacto</NavLink></li>
           </ul>
           
+          {/* 5. El 'if' se usa AQUÍ (en el JSX) para MOSTRAR/OCULTAR */}
           {showSearchBar && (
             <form className="d-flex ms-auto" role="search" onSubmit={handleSearchSubmit}>
-              
               <input 
                 className="form-control me-2" 
                 type="search" 
@@ -68,7 +81,6 @@ export const Navbar: React.FC = () => {
                 value={searchTerm} 
                 onChange={(e) => setSearchTerm(e.target.value)} 
               />
-              
               <button className="btn btn-gamer" type="submit">
                 <i className="bi bi-search"></i>
               </button>
@@ -80,24 +92,31 @@ export const Navbar: React.FC = () => {
             {currentUser ? (
               
               <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a 
+                  ref={dropdownToggleRef} 
+                  className="nav-link dropdown-toggle" 
+                  href="#" 
+                  role="button" 
+                  data-bs-toggle="dropdown" 
+                  aria-expanded="false"
+                >
                   <i className="bi bi-person-circle fs-4 me-2"></i>
                   Hola, {currentUser.nombre.split(' ')[0]}
                 </a>
+                
                 <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                   <li><NavLink className="dropdown-item" to="/perfil">Mi Perfil</NavLink></li>
                   
                   {currentUser.tipo === "Administrador" && (
                     <li><NavLink className="dropdown-item" to="/admin">Panel Admin</NavLink></li>
                   )}
-                  {currentUser.tipo === "Vendedor" && (
+                  {(currentUser.tipo === "Vendedor" || currentUser.tipo === "Administrador") && (
                      <li><NavLink className="dropdown-item" to="/vendedor">Panel Vendedor</NavLink></li>
                   )}
 
                   <li><hr className="dropdown-divider" /></li>
                   
                   <li>
-                    {/* --- AQUÍ SE USA 'logout' --- */}
                     <button className="dropdown-item" onClick={logout}>
                       Cerrar Sesión
                     </button>
@@ -128,7 +147,6 @@ export const Navbar: React.FC = () => {
                 data-bs-target="#offcanvasCarrito" 
               >
                 <i className="bi bi-cart fs-4 text-neon"></i>
-                {/* --- AQUÍ SE USA 'totalItemsEnCarrito' --- */}
                 <span className="badge bg-danger ms-1">{totalItemsEnCarrito}</span>
               </a>
             </li>
