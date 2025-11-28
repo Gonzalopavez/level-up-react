@@ -56,7 +56,7 @@ export const CheckoutPage: React.FC = () => {
 
 
   // --- LÓGICA DE GUARDADO ---
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // 1. Verificación (¡No podemos guardar una orden sin un usuario!)
@@ -75,22 +75,27 @@ export const CheckoutPage: React.FC = () => {
     };
 
     // 3. Llamamos al "Camarero" para que la guarde
-    const exito = guardarOrden(nuevaOrden);
+    try {
+      const exito = await guardarOrden(nuevaOrden);
 
-    if (exito) {
-      // 4. Si se guardó bien, mostramos la alerta, limpiamos y navegamos
-      Swal.fire({
-        title: '¡Compra Exitosa!',
-        text: 'Tu pedido ha sido procesado y será enviado a la brevedad.',
-        icon: 'success',
-        timer: 3000,
-        timerProgressBar: true
-      }).then(() => {
-        clearCart(); // Limpiamos el carrito
-        navigate('/'); // Enviamos al Home
-      });
-    } else {
-      // 5. Si falló el guardado (raro, pero puede pasar)
+      if (exito) {
+        // 4. Si se guardó bien, mostramos la alerta, limpiamos y navegamos
+        Swal.fire({
+          title: '¡Compra Exitosa!',
+          text: 'Tu pedido ha sido procesado y será enviado a la brevedad.',
+          icon: 'success',
+          timer: 3000,
+          timerProgressBar: true
+        }).then(() => {
+          clearCart(); // Limpiamos el carrito
+          navigate('/'); // Enviamos al Home
+        });
+      } else {
+        // 5. Si falló el guardado (raro, pero puede pasar)
+        Swal.fire('Error', 'No se pudo guardar tu orden. Intenta de nuevo.', 'error');
+      }
+    } catch (error) {
+      console.error('Error guardando orden:', error);
       Swal.fire('Error', 'No se pudo guardar tu orden. Intenta de nuevo.', 'error');
     }
   };

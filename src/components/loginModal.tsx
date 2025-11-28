@@ -16,7 +16,7 @@ export const LoginModal: React.FC = () => {
 
 
       // Llamamos a 'login' con UN solo objeto, como el "Cerebro" espera
-      const result = await login({ email: email, password: password });
+      const result = await login({ email: email, password: password } as any);
 
       if (result.ok) {
         // Cerramos el modal

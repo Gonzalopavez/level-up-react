@@ -476,3 +476,46 @@ Estilos de Contenido (Carrusel, Testimonios, Marcas, Footer)
   /* Añadimos el brillo neón solo al activo */
   box-shadow: 0 0 15px var(--neon-purple-shadow-light, rgba(138, 43, 226, 0.6));
 }
+
+
+
+/*===========================================
+Modal Neon Admin (CRUD Usuarios)
+===========================================*/
+
+.modal-neon-admin {
+  background-color: #111;
+  border: 2px solid var(--neon-purple);
+  box-shadow: 0 0 25px var(--neon-purple-shadow-heavy);
+  color: white;
+}
+
+.modal-neon-admin .form-label {
+  color: #ddd;
+}
+
+.modal-neon-admin .form-control,
+.modal-neon-admin .form-select {
+  background-color: #1a1a1a;
+  color: white;
+  border: 1px solid #444;
+}
+
+.modal-neon-admin .form-control:focus,
+.modal-neon-admin .form-select:focus {
+  border-color: var(--neon-purple);
+  box-shadow: 0 0 10px var(--neon-purple-shadow-light);
+}
+
+/* Select de roles */
+.select-rol-neon {
+  background-color: #1a1a1a;
+  color: white;
+  border: 1px solid var(--neon-purple);
+  cursor: pointer;
+}
+
+.select-rol-neon:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -16,7 +16,8 @@ export const ProtectedRoute: React.FC<Props> = ({ allowedRoles }) => {
     return <Navigate to="/" replace />;
   }
 
-  const isAllowed = allowedRoles.includes(currentUser.tipo);
+  const userTipo = currentUser.tipo ?? '';
+  const isAllowed = userTipo !== '' && allowedRoles.includes(userTipo);
 
   if (!isAllowed) {
     return <Navigate to="/" replace />;

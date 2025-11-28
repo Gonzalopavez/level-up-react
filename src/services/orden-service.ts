@@ -1,21 +1,17 @@
-
-
+// src/services/orden-service.ts
+import axios from 'axios';
 import type { IOrden } from "../models/orden-model";
 
-const ORDENES_KEY = 'ordenes'; // La "llave" de localStorage
+const API_URL = 'http://localhost:8080/api/ordenes';
 
 /**
  * @function getOrdenes
- * @description Obtiene (lee) todas las órdenes guardadas en localStorage.
- * La hacemos 'async' para simular una llamada real a una base de datos.
+ * Obtiene las órdenes desde Java
  */
 export const getOrdenes = async (): Promise<IOrden[]> => {
   try {
-    const ordenesGuardadas = localStorage.getItem(ORDENES_KEY);
-    if (!ordenesGuardadas) {
-      return []; // Devuelve vacío si no hay nada
-    }
-    return JSON.parse(ordenesGuardadas) as IOrden[];
+    const response = await axios.get(API_URL);
+    return response.data;
   } catch (error) {
     console.error("Error al leer las órdenes:", error);
     return [];
@@ -24,22 +20,32 @@ export const getOrdenes = async (): Promise<IOrden[]> => {
 
 /**
  * @function guardarOrden
- * @description Guarda una NUEVA orden en localStorage.
+ * Envía la orden a Java.
+ * IMPORTANTE: Transformamos los datos para que coincidan con lo que Java espera.
  */
-export const guardarOrden = (nuevaOrden: IOrden): boolean => {
+export const guardarOrden = async (ordenReact: IOrden): Promise<boolean> => {
   try {
-    // 1. Leemos las órdenes que ya existían
-    const ordenes: IOrden[] = JSON.parse(localStorage.getItem(ORDENES_KEY) || '[]');
     
-    // 2. Añadimos la nueva orden al listado
-    ordenes.push(nuevaOrden);
-    
-    // 3. Guardamos el listado actualizado
-    localStorage.setItem(ORDENES_KEY, JSON.stringify(ordenes));
+    // Transformación: React CartItem -> Java DetalleOrden
+    const itemsParaJava = ordenReact.items.map(item => ({
+      cantidad: item.cantidad,
+      precioUnitario: item.producto.precio,
+      producto: { id: item.producto.id } // Enviamos solo el ID del producto
+    }));
+
+    // Armamos el objeto final para Java
+    const ordenParaJava = {
+      fecha: ordenReact.fecha,
+      total: ordenReact.total,
+      cliente: { id: ordenReact.cliente.id }, // Enviamos solo el ID del usuario
+      items: itemsParaJava
+    };
+
+    await axios.post(API_URL, ordenParaJava);
     return true;
 
   } catch (error) {
-    console.error("Error al guardar la orden:", error);
+    console.error("Error al guardar la orden en Java:", error);
     return false;
   }
 };

@@ -9,7 +9,7 @@ import { NosotrosPage } from "../pages/nosotrosPage";
 import { BlogPage } from "../pages/blogPage";
 import { BlogPostRtx4090Page } from "../pages/blogPostRtx4090Page";
 import { BlogPostSonido71Page } from "../pages/blogPostSonido71Page";
-import { RegistroPage } from "../pages/registroPage";
+import RegistroPage from "../pages/registroPage";
 import { CheckoutPage } from "../pages/checkoutPage";
 
 // Páginas Vendedor
@@ -45,7 +45,7 @@ const router = createBrowserRouter([
 
       //RUTAS PROTEGIDAS PARA VENDEDORES
       {
-        element: <ProtectedRoute allowedRoles={["Vendedor"]} />,
+        element: <ProtectedRoute allowedRoles={["Vendedor", "Administrador"]} />,
         children: [
           { path: "/vendedor", element: <VendedorPage /> },
           { path: "/vendedor/stock", element: <GestionStockVendedor /> },

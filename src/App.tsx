@@ -1,6 +1,8 @@
-
 import { useEffect, useRef } from 'react'; 
 import { Outlet } from 'react-router-dom';
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./main.css";
 
 // Componentes "carcasa"
 import { Navbar } from './components/navbar';
@@ -17,32 +19,21 @@ function App() {
   const { currentUser } = useAuth();
   const { clearCart } = useCart();
 
-  // "Memoria a Corto Plazo" (useRef)
-  // Para recordar si el usuario ESTABA logueado
   const loggedInAnteriormente = useRef(!!currentUser); 
 
-  // El "Disparador" (useEffect)
   useEffect(() => {
-    
 
-    
-    // 1. SI ACABAS DE INICIAR SESIÓN
-    // (Si ahora SÍ hay usuario, PERO antes NO había)
     if (currentUser && !loggedInAnteriormente.current) {
-      clearCart(); // Limpia el carrito del "invitado"
+      clearCart();
     }
     
-    // 2. SI ACABAS DE CERRAR SESIÓN
-    // (Si ahora NO hay usuario, PERO antes SÍ había)
     if (!currentUser && loggedInAnteriormente.current) {
-      clearCart(); // Limpia el carrito del "usuario"
+      clearCart();
     }
     
-    // 3. Actualizamos la "memoria" para el próximo cambio
     loggedInAnteriormente.current = !!currentUser;
-    
-  }, [currentUser, clearCart]); // <-- Seguimos observando
 
+  }, [currentUser, clearCart]);
 
   return (
     <>

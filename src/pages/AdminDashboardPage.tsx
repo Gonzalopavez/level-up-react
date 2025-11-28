@@ -3,7 +3,7 @@ import React from 'react';
 
 // 1. Importamos los "ladrillos" del Admin
 import { GestionProductos } from '../components/admin/gestionProductos';
-import { GestionUsuarios } from '../components/admin/gestiosUsuarios';
+import { GestionUsuarios } from '../components/admin/gestionUsuarios';
 
 // 2. ¡¡AQUÍ ESTÁ EL CAMBIO!!
 // Importamos el componente "inteligente" que acabamos de arreglar
@@ -18,7 +18,7 @@ export const AdminDashboardPage: React.FC = () => {
       </p>
 
       {/* --- Pestañas de Navegación --- */}
-      <ul className="nav nav-tabs nav-fill" id="adminTab" role="tablist">
+      <ul className="nav nav-pills nav-fill nav-gamer mb-3" id="adminTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button 
             className="nav-link active" 
