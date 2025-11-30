@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { HeroCarousel } from '../components/heroCarousel';
 import { ProductCard } from '../components/productCard';
-import { FeatureCard } from '../components/featureCard'; // <-- 1. Importamos la nueva FeatureCard
+import { FeatureCard } from '../components/featureCard'; 
 import { getProductos } from '../services/producto-service';
 import type { IProducto } from '../models/producto-model';
 

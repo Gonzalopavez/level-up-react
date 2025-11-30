@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import type { IOrden } from '../../models/orden-model';
-import { getOrdenes } from '../../services/orden-service'; // <-- Importamos el "Camarero"
+import { getOrdenes } from '../../services/orden-service'; 
 import { formatearPrecio } from '../../utils/formatters';
 
 export const VerVentas: React.FC = () => {

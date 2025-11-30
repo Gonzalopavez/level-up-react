@@ -62,7 +62,7 @@ export const Navbar: React.FC = () => {
         <div className="collapse navbar-collapse" id="navbarPrincipal">
           
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
-            {/* ... (links no cambian) ... */}
+            
             <li className="nav-item mx-2"><NavLink className="nav-link" aria-current="page" to="/" end><i className="bi bi-house-door-fill fs-5"></i></NavLink></li>
             <li className="nav-item mx-2"><NavLink className="nav-link" to="/productos">Productos</NavLink></li>
             <li className="nav-item mx-2"><NavLink className="nav-link" to="/nosotros">Nosotros</NavLink></li>

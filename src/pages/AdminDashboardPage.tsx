@@ -5,8 +5,8 @@ import React from 'react';
 import { GestionProductos } from '../components/admin/gestionProductos';
 import { GestionUsuarios } from '../components/admin/gestionUsuarios';
 
-// 2. ¡¡AQUÍ ESTÁ EL CAMBIO!!
-// Importamos el componente "inteligente" que acabamos de arreglar
+
+// Importamos el componente "inteligente" 
 import { VerVentas } from '../components/vendedor/verVentas';
 
 export const AdminDashboardPage: React.FC = () => {

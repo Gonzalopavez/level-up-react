@@ -29,7 +29,7 @@ const parseNumberFromFormatted = (s: string) => {
 const isValidURL = (s: string) => {
   if (!s) return false;
 
-  // Rutas internas permitidas ej: "/img/mouse1.jpg"
+  // Rutas internas permitidas ej: "/img/productos/mouse1.jpg"
   if (s.startsWith("/img/")) return true;
 
   try {

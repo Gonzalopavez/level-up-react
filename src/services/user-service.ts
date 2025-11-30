@@ -33,10 +33,10 @@ export const updateUserRole = async (id: number, tipo: string): Promise<boolean>
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       // backend espera el valor directamente o un JSON con "tipo": "X"
-      body: JSON.stringify(tipo), // si tu backend espera string raw, este es el body; si espera JSON, cambia a JSON.stringify({ tipo })
+      body: JSON.stringify(tipo), // si backend espera string raw, este es el body; si espera JSON, cambia a JSON.stringify({ tipo })
     });
 
-    // Si tu backend espera JSON { "tipo": "Vendedor" } en el body:
+    // Si backend espera JSON { "tipo": "Vendedor" } en el body:
     // body: JSON.stringify({ tipo })
     return res.ok;
   } catch (err) {
@@ -45,7 +45,7 @@ export const updateUserRole = async (id: number, tipo: string): Promise<boolean>
   }
 };
 
-// Actualización COMPLETA de usuario (envía solo los campos que le des)
+// Actualización de usuario (envía solo los campos que le des)
 export const updateUser = async (id: number, usuario: Partial<IUsuario>): Promise<boolean> => {
   try {
     const res = await fetch(`${API_URL}/${id}`, {

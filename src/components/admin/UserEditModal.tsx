@@ -4,7 +4,7 @@ import type { IUsuario } from "../../models/usuario-model";
 import { validarUsuarioCompleto, type ValidationErrors, formatFechaInput } from "../../utils/validaciones-usuario-modal";
 import Swal from "sweetalert2";
 
-/* Reutilizamos el mismo set de regiones/comunas que usas en registro */
+/* Reutilizamos el mismo set de regiones/comunas que en registro */
 const regionesYComunas = [
   { nombre: "Región Metropolitana", comunas: ["Santiago", "Providencia", "Las Condes", "Maipú", "Puente Alto"] },
   { nombre: "Valparaíso", comunas: ["Valparaíso", "Viña del Mar", "Quilpué", "Villa Alemana"] },
