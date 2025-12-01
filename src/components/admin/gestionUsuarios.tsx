@@ -28,11 +28,13 @@ export const GestionUsuarios: React.FC = () => {
   const handleDelete = async (u: IUsuario) => {
     if (!u.id) return;
 
-    if (u.tipo === "Administrador") {
+    // ❌ No eliminar admin principal
+    if (u.correo.toLowerCase() === "admin@duoc.cl") {
       Swal.fire("Atención", "No puedes eliminar al Administrador principal.", "warning");
       return;
     }
 
+    // ❌ No eliminarse a sí mismo
     if (currentUser?.id === u.id) {
       Swal.fire("Atención", "No puedes eliminar tu propia cuenta.", "warning");
       return;
@@ -46,14 +48,20 @@ export const GestionUsuarios: React.FC = () => {
       confirmButtonText: "Eliminar",
     });
 
-    if (confirmed.isConfirmed) {
-      const ok = await deleteUser(u.id);
-      if (ok) {
-        Swal.fire("Eliminado", "Usuario eliminado correctamente.", "success");
-        cargarUsuarios();
-      } else {
-        Swal.fire("Error", "No se pudo eliminar usuario.", "error");
-      }
+    if (!confirmed.isConfirmed) return;
+
+    // 🔥 Ahora deleteUser devuelve { ok, message }
+    const result = await deleteUser(u.id);
+
+    if (result.ok) {
+      Swal.fire("Eliminado", "Usuario eliminado correctamente.", "success");
+      cargarUsuarios();
+    } else {
+      Swal.fire(
+        "No se puede eliminar",
+        result.message || "Error desconocido.",
+        "error"
+      );
     }
   };
 
@@ -70,15 +78,14 @@ export const GestionUsuarios: React.FC = () => {
   const guardarEdicion = async (datos: Partial<IUsuario>) => {
     if (!editingUser?.id) return false;
 
-    // Aseguramos no cambiar el run
+    // Mantener el RUN fijo
     const payload: Partial<IUsuario> = { ...datos, run: editingUser.run };
 
     const ok = await updateUser(editingUser.id, payload);
     if (ok) {
       Swal.fire("Guardado", "Usuario actualizado correctamente.", "success");
       cargarUsuarios();
-      setModalVisible(false);
-      setEditingUser(null);
+      cerrarModal();
       return true;
     } else {
       Swal.fire("Error", "No se pudo guardar los cambios.", "error");
@@ -114,8 +121,22 @@ export const GestionUsuarios: React.FC = () => {
                 <td>{u.correo}</td>
                 <td>{u.tipo}</td>
                 <td className="text-center">
-                  <button className="btn btn-sm btn-primary me-2" onClick={() => abrirEdicion(u)}>Editar</button>
-                  <button className="btn btn-sm btn-danger" onClick={() => handleDelete(u)} disabled={u.tipo === "Administrador"}>Eliminar</button>
+
+                  <button
+                    className="btn btn-sm btn-primary me-2"
+                    onClick={() => abrirEdicion(u)}
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDelete(u)}
+                    disabled={u.correo.toLowerCase() === "admin@duoc.cl"}
+                  >
+                    Eliminar
+                  </button>
+
                 </td>
               </tr>
             ))}
@@ -123,7 +144,6 @@ export const GestionUsuarios: React.FC = () => {
         </table>
       </div>
 
-      {/* Modal controlado */}
       <UserEditModal
         visible={modalVisible}
         usuario={editingUser}

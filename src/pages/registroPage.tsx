@@ -3,8 +3,6 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import type { IUsuario } from '../models/usuario-model';
 import { register } from '../services/auth-service';
-
-// Importar estilos
 import '../main.css';
 
 // ======================
@@ -41,7 +39,42 @@ const validarRUN = (run: string): boolean => {
 };
 
 // ===========================
-// Validaciones EXACTAS del proyecto antiguo
+// VALIDACIÓN PROFESIONAL FECHA DE NACIMIENTO
+// ===========================
+const validarFechaNacimiento = (fecha: string): boolean => {
+  if (!fecha) return false;
+
+  // Validar formato dd/mm/yyyy
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(fecha)) return false;
+
+  const [dd, mm, yyyy] = fecha.split("/").map(n => parseInt(n, 10));
+
+  // Validar mes
+  if (mm < 1 || mm > 12) return false;
+
+  // Validar días según mes
+  const diasPorMes = [
+    31,
+    (yyyy % 4 === 0 && (yyyy % 100 !== 0 || yyyy % 400 === 0)) ? 29 : 28,
+    31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+  ];
+  if (dd < 1 || dd > diasPorMes[mm - 1]) return false;
+
+  // Validar edad entre 18 y 100 años
+  const hoy = new Date();
+  const fechaNac = new Date(yyyy, mm - 1, dd);
+
+  let edad = hoy.getFullYear() - fechaNac.getFullYear();
+  const mesDiff = hoy.getMonth() - fechaNac.getMonth();
+  const diaDiff = hoy.getDate() - fechaNac.getDate();
+
+  if (mesDiff < 0 || (mesDiff === 0 && diaDiff < 0)) edad--;
+
+  return edad >= 18 && edad <= 100;
+};
+
+// ===========================
+// Validaciones generales
 // ===========================
 const validators = {
   nombre: (v: string) => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,50}$/.test(v),
@@ -76,14 +109,13 @@ const RegistroPage: React.FC = () => {
   const [descuentoVisible, setDescuentoVisible] = useState(false);
 
   // ===========================
-  // Cambios en inputs
+  // Manejo general de inputs
   // ===========================
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    // Validaciones normales
     if (validators[name as keyof typeof validators]) {
       setErrors(prev => ({
         ...prev,
@@ -91,12 +123,10 @@ const RegistroPage: React.FC = () => {
       }));
     }
 
-    // Validación RUN
     if (name === "run") {
       setErrors(prev => ({ ...prev, run: !validarRUN(value) }));
     }
 
-    // Mostrar mensaje DUOC
     if (name === "correo") {
       setDescuentoVisible(
         value.endsWith("@duoc.cl") ||
@@ -106,7 +136,7 @@ const RegistroPage: React.FC = () => {
   };
 
   // ===========================
-  // Autoformato fecha DD/MM/AAAA
+  // Autoformato fecha dd/mm/yyyy
   // ===========================
   const handleFechaInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let valor = e.target.value.replace(/\D/g, "").slice(0, 8);
@@ -116,30 +146,33 @@ const RegistroPage: React.FC = () => {
   };
 
   // ===========================
-  // Enviar Formulario
+  // Enviar formulario
   // ===========================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validaciones EXACTAS del JS antiguo
     if (!validarRUN(formData.run)) {
-      Swal.fire("Error", "El RUN no es válido", "error");
+      Swal.fire("Error", "El RUN no es válido.", "error");
       return;
     }
     if (!validators.nombre(formData.nombre)) {
-      Swal.fire("Error", "Nombre inválido", "error");
+      Swal.fire("Error", "Nombre inválido.", "error");
       return;
     }
     if (!validators.apellidos(formData.apellidos)) {
-      Swal.fire("Error", "Apellidos inválidos", "error");
+      Swal.fire("Error", "Apellidos inválidos.", "error");
       return;
     }
     if (!validators.correo(formData.correo)) {
-      Swal.fire("Error", "Correo inválido", "error");
+      Swal.fire("Error", "Correo inválido.", "error");
+      return;
+    }
+    if (!validarFechaNacimiento(formData.fechaNacimiento)) {
+      Swal.fire("Error", "Debes tener entre 18 y 100 años y usar una fecha válida.", "error");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      Swal.fire("Error", "Las contraseñas no coinciden", "error");
+      Swal.fire("Error", "Las contraseñas no coinciden.", "error");
       return;
     }
 
@@ -171,14 +204,10 @@ const RegistroPage: React.FC = () => {
       if (resultado.success) {
         Swal.fire("¡Registro exitoso!", "Tu cuenta ha sido creada.", "success")
           .then(() => {
-
-            // *** LOGIN AUTOMÁTICO ***
             if (resultado.usuario) {
               localStorage.setItem("currentUser", JSON.stringify(resultado.usuario));
               window.dispatchEvent(new Event("storage"));
             }
-
-            // Redirigir al HOME
             navigate("/");
           });
       } else {
@@ -190,66 +219,34 @@ const RegistroPage: React.FC = () => {
     }
   };
 
-  // ===========================
-  // UI
-  // ===========================
   return (
     <div className="container pagina-registro">
       <div className="row justify-content-center">
         <div className="col-lg-6 col-md-8">
-
           <h1 className="text-center mb-4 titulo-animado">
             <i className="bi bi-person-plus me-2"></i> CREAR CUENTA
           </h1>
 
           <form className="p-4 rounded bg-dark form-neon" onSubmit={handleSubmit}>
 
-            {/* Nombre */}
             <div className="mb-3">
               <label className="form-label">Primer nombre</label>
-              <input
-                type="text"
-                className={`form-control ${errors.nombre ? "is-invalid" : ""}`}
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-              />
+              <input type="text" className={`form-control ${errors.nombre ? "is-invalid" : ""}`} name="nombre" value={formData.nombre} onChange={handleChange} />
             </div>
 
-            {/* Apellidos */}
             <div className="mb-3">
               <label className="form-label">Apellidos</label>
-              <input
-                type="text"
-                className={`form-control ${errors.apellidos ? "is-invalid" : ""}`}
-                name="apellidos"
-                value={formData.apellidos}
-                onChange={handleChange}
-              />
+              <input type="text" className={`form-control ${errors.apellidos ? "is-invalid" : ""}`} name="apellidos" value={formData.apellidos} onChange={handleChange} />
             </div>
 
-            {/* RUN */}
             <div className="mb-3">
               <label className="form-label">RUN</label>
-              <input
-                type="text"
-                className={`form-control ${errors.run ? "is-invalid" : ""}`}
-                name="run"
-                value={formData.run}
-                onChange={handleChange}
-              />
+              <input type="text" className={`form-control ${errors.run ? "is-invalid" : ""}`} name="run" value={formData.run} onChange={handleChange} />
             </div>
 
-            {/* Correo */}
             <div className="mb-3">
               <label className="form-label">Correo electrónico</label>
-              <input
-                type="email"
-                className={`form-control ${errors.correo ? "is-invalid" : ""}`}
-                name="correo"
-                value={formData.correo}
-                onChange={handleChange}
-              />
+              <input type="email" className={`form-control ${errors.correo ? "is-invalid" : ""}`} name="correo" value={formData.correo} onChange={handleChange} />
             </div>
 
             {descuentoVisible && (
@@ -258,76 +255,38 @@ const RegistroPage: React.FC = () => {
               </div>
             )}
 
-            {/* Contraseña */}
-            <div className="mb-3 password-wrapper">
+            <div className="mb-3">
               <label className="form-label">Contraseña</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <input type="password" className="form-control" name="password" value={formData.password} onChange={handleChange} />
             </div>
 
-            {/* Confirmación */}
-            <div className="mb-3 password-wrapper">
+            <div className="mb-3">
               <label className="form-label">Confirmar Contraseña</label>
-              <input
-                type="password"
-                className="form-control"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
+              <input type="password" className="form-control" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
             </div>
 
-            {/* Fecha */}
             <div className="mb-3">
               <label className="form-label">Fecha de Nacimiento</label>
-              <input
-                type="text"
-                className="form-control"
+              <input type="text" className="form-control"
                 name="fechaNacimiento"
                 placeholder="dd/mm/aaaa"
                 value={formData.fechaNacimiento}
-                onChange={handleFechaInput}
-              />
+                onChange={handleFechaInput} />
             </div>
 
-            {/* Teléfono */}
             <div className="mb-3">
               <label className="form-label">Teléfono (opcional)</label>
-              <input
-                type="text"
-                className={`form-control ${errors.telefono ? "is-invalid" : ""}`}
-                name="telefono"
-                value={formData.telefono}
-                onChange={handleChange}
-              />
+              <input type="text" className={`form-control ${errors.telefono ? "is-invalid" : ""}`} name="telefono" value={formData.telefono} onChange={handleChange} />
             </div>
 
-            {/* Dirección */}
             <div className="mb-3">
               <label className="form-label">Dirección</label>
-              <input
-                type="text"
-                className="form-control"
-                name="direccion"
-                value={formData.direccion}
-                onChange={handleChange}
-              />
+              <input type="text" className="form-control" name="direccion" value={formData.direccion} onChange={handleChange} />
             </div>
 
-            {/* Región */}
             <div className="mb-3">
               <label className="form-label">Región</label>
-              <select
-                className="form-select"
-                name="region"
-                value={formData.region}
-                onChange={handleChange}
-              >
+              <select className="form-select" name="region" value={formData.region} onChange={handleChange}>
                 <option value="">Selecciona una región</option>
                 {regionesYComunas.map(r => (
                   <option key={r.nombre} value={r.nombre}>{r.nombre}</option>
@@ -335,27 +294,17 @@ const RegistroPage: React.FC = () => {
               </select>
             </div>
 
-            {/* Comuna */}
             <div className="mb-3">
               <label className="form-label">Comuna</label>
-              <select
-                className="form-select"
-                name="comuna"
-                value={formData.comuna}
-                onChange={handleChange}
-              >
+              <select className="form-select" name="comuna" value={formData.comuna} onChange={handleChange}>
                 <option value="">Selecciona una comuna</option>
-                {regionesYComunas
-                  .find(r => r.nombre === formData.region)
-                  ?.comunas.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
+                {regionesYComunas.find(r => r.nombre === formData.region)?.comunas.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
               </select>
             </div>
 
-            <button type="submit" className="btn btn-gamer w-100 btn-lg">
-              Crear Cuenta
-            </button>
+            <button type="submit" className="btn btn-gamer w-100 btn-lg">Crear Cuenta</button>
 
           </form>
         </div>

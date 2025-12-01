@@ -16,15 +16,23 @@ export const getRegisteredUsers = async (): Promise<IUsuario[]> => {
 };
 
 // Eliminar usuario
-export const deleteUser = async (id: number): Promise<boolean> => {
+export const deleteUser = async (id: number): Promise<{ ok: boolean; message?: string }> => {
   try {
     const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-    return res.ok;
+
+    if (!res.ok) {
+      const msg = await res.text();
+      return { ok: false, message: msg };
+    }
+
+    return { ok: true };
+
   } catch (err) {
     console.error("Error deleteUser:", err);
-    return false;
+    return { ok: false, message: "Error de conexión con el servidor." };
   }
 };
+
 
 // Actualizar solo el ROL
 export const updateUserRole = async (id: number, tipo: string): Promise<boolean> => {

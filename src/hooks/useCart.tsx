@@ -1,29 +1,30 @@
-
-
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type { IProducto } from '../models/producto-model';
-//Define el "molde" de un item en el carrito
+import { useAuth } from './useAuth';
+
+// Molde de un item del carrito
 export interface ICartItem {
   producto: IProducto;
   cantidad: number;
 }
 
-
-
-// 2. Define el "molde" de lo que el "cerebro" va a compartir
 export interface CartContextType {
   cartItems: ICartItem[];
   addToCart: (producto: IProducto) => void;
   removeFromCart: (productoId: number) => void;
   decreaseQuantity: (productoId: number) => void;
   clearCart: () => void;
-  totalPedido: number; 
+
+  subTotal: number;
+  descuento: number;
+  totalFinal: number;
+  descuentoActivo: boolean;
+  setDescuentoActivo: (v: boolean) => void;
 }
 
-// Crea el "túnel" (Context)
+// Contexto
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// Crea el "enchufe" (Hook)
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
@@ -34,85 +35,104 @@ export const useCart = () => {
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   
-  // "Memoria" para guardar los items
   const [cartItems, setCartItems] = useState<ICartItem[]>(() => {
-    // Carga inicial desde localStorage
     try {
-      const storedItems = localStorage.getItem('cartItems');
-      return storedItems ? JSON.parse(storedItems) : [];
-    } catch (error) {
-      console.error("Error al cargar carrito de localStorage", error);
+      const stored = localStorage.getItem('cartItems');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
       return [];
     }
   });
 
-  // "Efecto" que guarda en localStorage CADA VEZ que cartItems cambia
+  const [descuentoActivo, setDescuentoActivo] = useState<boolean>(() => {
+    return localStorage.getItem("descuentoActivo") === "true";
+  });
+
+  const { currentUser } = useAuth();
+
+  // Guardar carrito
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  
-  // Calculamos el total.
-  // 'useMemo' es un "truco" de React para que este cálculo
-  // solo se ejecute si 'cartItems' cambia (es más eficiente).
-  const totalPedido = useMemo(() => {
+  // Guardar interruptor descuento
+  useEffect(() => {
+    localStorage.setItem("descuentoActivo", descuentoActivo.toString());
+  }, [descuentoActivo]);
+
+  // --- CALCULO SUBTOTAL ---
+  const subTotal = useMemo(() => {
     return cartItems.reduce((total, item) => {
-      return total + (item.producto.precio * item.cantidad);
+      const precio = Number(item.producto.precio) || 0;
+      const cantidad = Number(item.cantidad) || 1;
+      return total + precio * cantidad;
     }, 0);
-  }, [cartItems]); // <-- Se recalcula solo si cartItems cambia
+  }, [cartItems]);
 
-  
+  // --- DESCUENTO ---
+  const descuento = useMemo(() => {
+    const esDuoc = currentUser?.correo?.toLowerCase().endsWith("@duoc.cl");
 
+    if (!esDuoc) return 0;
+    if (!descuentoActivo) return 0;
+
+    return subTotal * 0.2;
+  }, [subTotal, currentUser, descuentoActivo]);
+
+  // --- TOTAL FINAL ---
+  const totalFinal = useMemo(() => {
+    return subTotal - descuento;
+  }, [subTotal, descuento]);
+
+  // --- CRUD CARRITO ---
   const addToCart = (producto: IProducto) => {
-    setCartItems(prevItems => {
-      const itemExistente = prevItems.find(item => item.producto.id === producto.id);
-      if (itemExistente) {
-        return prevItems.map(item =>
-          item.producto.id === producto.id
-            ? { ...item, cantidad: item.cantidad + 1 }
-            : item
+    setCartItems(prev => {
+      const item = prev.find(i => i.producto.id === producto.id);
+      if (item) {
+        return prev.map(i =>
+          i.producto.id === producto.id
+            ? { ...i, cantidad: i.cantidad + 1 }
+            : i
         );
       }
-      return [...prevItems, { producto, cantidad: 1 }];
+      return [...prev, { producto, cantidad: 1 }];
     });
   };
 
   const decreaseQuantity = (productoId: number) => {
-    setCartItems(prevItems => {
-      const itemExistente = prevItems.find(item => item.producto.id === productoId);
-      if (itemExistente && itemExistente.cantidad > 1) {
-        return prevItems.map(item =>
-          item.producto.id === productoId
-            ? { ...item, cantidad: item.cantidad - 1 }
-            : item
+    setCartItems(prev => {
+      const item = prev.find(i => i.producto.id === productoId);
+      if (item && item.cantidad > 1) {
+        return prev.map(i =>
+          i.producto.id === productoId
+            ? { ...i, cantidad: i.cantidad - 1 }
+            : i
         );
       }
-      // Si la cantidad es 1, lo elimina
-      return prevItems.filter(item => item.producto.id !== productoId);
+      return prev.filter(i => i.producto.id !== productoId);
     });
   };
 
   const removeFromCart = (productoId: number) => {
-    setCartItems(prevItems => prevItems.filter(item => item.producto.id !== productoId));
+    setCartItems(prev => prev.filter(i => i.producto.id !== productoId));
   };
 
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  const clearCart = () => setCartItems([]);
 
-  // 6. Define el "valor" que el "Tablero" va a compartir
+  // Exponemos todo
   const value = {
     cartItems,
     addToCart,
     removeFromCart,
     decreaseQuantity,
     clearCart,
-    totalPedido 
+
+    subTotal,
+    descuento,
+    totalFinal,
+    descuentoActivo,
+    setDescuentoActivo
   };
 
-  return (
-    <CartContext.Provider value={value}>
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };

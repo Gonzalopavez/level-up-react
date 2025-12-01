@@ -1,15 +1,16 @@
+// src/models/orden-model.ts
 
 import type { ICartItem } from "../hooks/useCart";
 import type { IUsuario } from "./usuario-model";
 
 /**
  * @interface IOrden
- * @description El "molde" de una orden de compra completada.
+ * Representa la orden que se envía a Java.
  */
 export interface IOrden {
-  id: number; // timestamp (la fecha en milisegundos)
-  fecha: string; // La fecha legible (ej: "14/11/2025 17:30")
-  cliente: IUsuario; // El usuario que compró
-  items: ICartItem[]; // La lista de productos
-  total: number; // El total pagado
+  id: number;
+  fecha: string;
+  cliente: IUsuario;
+  items: ICartItem[];
+  total: number; // totalFinal
 }
