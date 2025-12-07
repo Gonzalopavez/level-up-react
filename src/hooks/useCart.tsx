@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 import type { IProducto } from '../models/producto-model';
 import { useAuth } from './useAuth';
 
-// Molde de un item del carrito
 export interface ICartItem {
   producto: IProducto;
   cantidad: number;
@@ -22,7 +21,6 @@ export interface CartContextType {
   setDescuentoActivo: (v: boolean) => void;
 }
 
-// Contexto
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const useCart = () => {
@@ -34,11 +32,26 @@ export const useCart = () => {
 };
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  
+
+  // --- LIMITE DE SEGURIDAD GLOBAL ---  
+  const LIMITE_MAXIMO = 999; // evita que agreguen 999999999 desde consola
+
   const [cartItems, setCartItems] = useState<ICartItem[]>(() => {
     try {
       const stored = localStorage.getItem('cartItems');
-      return stored ? JSON.parse(stored) : [];
+      if (!stored) return [];
+
+      const parsed: ICartItem[] = JSON.parse(stored);
+
+      // 🔥 SANITIZACIÓN: corregir cantidades inválidas o absurdas
+      return parsed.map(item => ({
+        ...item,
+        cantidad: Math.min(
+          Number(item.cantidad) || 1,
+          item.producto?.stock ?? 1,
+          LIMITE_MAXIMO
+        )
+      }));
     } catch {
       return [];
     }
@@ -50,17 +63,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const { currentUser } = useAuth();
 
-  // Guardar carrito
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Guardar interruptor descuento
   useEffect(() => {
     localStorage.setItem("descuentoActivo", descuentoActivo.toString());
   }, [descuentoActivo]);
 
-  // --- CALCULO SUBTOTAL ---
   const subTotal = useMemo(() => {
     return cartItems.reduce((total, item) => {
       const precio = Number(item.producto.precio) || 0;
@@ -69,32 +79,40 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 0);
   }, [cartItems]);
 
-  // --- DESCUENTO ---
   const descuento = useMemo(() => {
     const esDuoc = currentUser?.correo?.toLowerCase().endsWith("@duoc.cl");
-
     if (!esDuoc) return 0;
     if (!descuentoActivo) return 0;
 
     return subTotal * 0.2;
   }, [subTotal, currentUser, descuentoActivo]);
 
-  // --- TOTAL FINAL ---
   const totalFinal = useMemo(() => {
     return subTotal - descuento;
   }, [subTotal, descuento]);
 
-  // --- CRUD CARRITO ---
+  // ==========================================
+  //        🛡️ FUNCIONES PROTEGIDAS
+  // ==========================================
+
   const addToCart = (producto: IProducto) => {
     setCartItems(prev => {
-      const item = prev.find(i => i.producto.id === producto.id);
-      if (item) {
+      const encontrado = prev.find(i => i.producto.id === producto.id);
+
+      if (encontrado) {
+        const nuevaCantidad = Math.min(
+          encontrado.cantidad + 1,
+          producto.stock,
+          LIMITE_MAXIMO
+        );
+
         return prev.map(i =>
           i.producto.id === producto.id
-            ? { ...i, cantidad: i.cantidad + 1 }
+            ? { ...i, cantidad: nuevaCantidad }
             : i
         );
       }
+
       return [...prev, { producto, cantidad: 1 }];
     });
   };
@@ -102,13 +120,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const decreaseQuantity = (productoId: number) => {
     setCartItems(prev => {
       const item = prev.find(i => i.producto.id === productoId);
+
       if (item && item.cantidad > 1) {
         return prev.map(i =>
           i.producto.id === productoId
-            ? { ...i, cantidad: i.cantidad - 1 }
+            ? { 
+                ...i, 
+                cantidad: Math.max(1, item.cantidad - 1)
+              }
             : i
         );
       }
+
       return prev.filter(i => i.producto.id !== productoId);
     });
   };
@@ -119,7 +142,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => setCartItems([]);
 
-  // Exponemos todo
   const value = {
     cartItems,
     addToCart,
