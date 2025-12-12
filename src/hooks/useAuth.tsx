@@ -1,18 +1,13 @@
-
-
 import React, { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import type { IUsuario, ILoginCredentials } from "../models/usuario-model";
-// Importamos el "molde" Y la función (con un alias)
 import { 
-  login as loginService, // <-- Importamos la función como "loginService"
-  type LoginResult        // <-- Importamos el "molde"
+  login as loginService,
+  type LoginResult
 } from '../services/auth-service';
 
-// "Molde" del Cerebro
 interface AuthContextType {
   currentUser: IUsuario | null;
-  // La función login ahora espera UN objeto (credentials)
-  login: (credentials: ILoginCredentials) => Promise<LoginResult>; 
+  login: (credentials: ILoginCredentials) => Promise<LoginResult>;
   logout: () => void;
 }
 
@@ -23,9 +18,10 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  
+
   const [currentUser, setCurrentUser] = useState<IUsuario | null>(null);
 
+  // Al cargar la página: restaurar usuario
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem('currentUser');
     if (usuarioGuardado) {
@@ -33,42 +29,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // Función de Login
+  // LOGIN
   const login = async (credentials: ILoginCredentials): Promise<LoginResult> => {
-    
-    // Llamamos a la función "loginService" 
     const result = await loginService(credentials);
 
     if (result.ok && result.usuario) {
+
+      // Restaurar usuario actual
       setCurrentUser(result.usuario);
       localStorage.setItem('currentUser', JSON.stringify(result.usuario));
     }
-    
-    return result; // Devuelve el objeto { ok, usuario, mensaje }
+
+    return result;
   };
 
+  // LOGOUT (🔥 también vacía carrito)
   const logout = () => {
+
+    if (currentUser) {
+      // Borrar el carrito del usuario que se va
+      localStorage.removeItem(`cartItems_user_${currentUser.id}`);
+    }
+
+    // Borrar usuario
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
   };
 
-  const value = {
-    currentUser,
-    login,
-    logout
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ currentUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth debe ser usado dentro de un AuthProvider');
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth debe ser usado dentro de AuthProvider');
+  return ctx;
 };

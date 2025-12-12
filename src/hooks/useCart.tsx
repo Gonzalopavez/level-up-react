@@ -24,27 +24,48 @@ export interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart debe ser usado dentro de un CartProvider');
-  }
-  return context;
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart debe ser usado dentro de CartProvider");
+  return ctx;
 };
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
-  // --- LIMITE DE SEGURIDAD GLOBAL ---  
-  const LIMITE_MAXIMO = 999; // evita que agreguen 999999999 desde consola
+  const LIMITE_MAXIMO = 999;
 
-  const [cartItems, setCartItems] = useState<ICartItem[]>(() => {
+  const { currentUser } = useAuth();
+
+  // Clave del carrito según el usuario (o vacío si es invitado)
+  const getStorageKey = () => {
+    if (currentUser) return `cartItems_user_${currentUser.id}`;
+    return null; // invitados no tienen carrito persistente
+  };
+
+  // Cargar carrito cuando cambia usuario
+  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
+
+  useEffect(() => {
+    const key = getStorageKey();
+
+    if (!key) {
+      // Invitado → carrito siempre vacío
+      setCartItems([]);
+      return;
+    }
+
+    // Usuario logueado → cargar su carrito personal
+    const stored = localStorage.getItem(key);
+
+    if (!stored) {
+      setCartItems([]);
+      return;
+    }
+
     try {
-      const stored = localStorage.getItem('cartItems');
-      if (!stored) return [];
-
       const parsed: ICartItem[] = JSON.parse(stored);
 
-      // 🔥 SANITIZACIÓN: corregir cantidades inválidas o absurdas
-      return parsed.map(item => ({
+      // Sanitizar cantidades
+      const safe = parsed.map(item => ({
         ...item,
         cantidad: Math.min(
           Number(item.cantidad) || 1,
@@ -52,25 +73,35 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           LIMITE_MAXIMO
         )
       }));
-    } catch {
-      return [];
-    }
-  });
 
+      setCartItems(safe);
+
+    } catch {
+      setCartItems([]);
+    }
+
+  }, [currentUser]);
+
+
+  // Guardar carrito cuando cambia
+  useEffect(() => {
+    const key = getStorageKey();
+    if (!key) return; // invitados no guardan carrito
+    localStorage.setItem(key, JSON.stringify(cartItems));
+  }, [cartItems, currentUser]);
+
+
+  // Descuento DUOC
   const [descuentoActivo, setDescuentoActivo] = useState<boolean>(() => {
     return localStorage.getItem("descuentoActivo") === "true";
   });
-
-  const { currentUser } = useAuth();
-
-  useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
 
   useEffect(() => {
     localStorage.setItem("descuentoActivo", descuentoActivo.toString());
   }, [descuentoActivo]);
 
+
+  // Cálculos
   const subTotal = useMemo(() => {
     return cartItems.reduce((total, item) => {
       const precio = Number(item.producto.precio) || 0;
@@ -83,32 +114,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const esDuoc = currentUser?.correo?.toLowerCase().endsWith("@duoc.cl");
     if (!esDuoc) return 0;
     if (!descuentoActivo) return 0;
-
     return subTotal * 0.2;
   }, [subTotal, currentUser, descuentoActivo]);
 
-  const totalFinal = useMemo(() => {
-    return subTotal - descuento;
-  }, [subTotal, descuento]);
+  const totalFinal = useMemo(() => subTotal - descuento, [subTotal, descuento]);
 
-  // ==========================================
-  //        🛡️ FUNCIONES PROTEGIDAS
-  // ==========================================
 
+  // Funciones del carrito
   const addToCart = (producto: IProducto) => {
     setCartItems(prev => {
-      const encontrado = prev.find(i => i.producto.id === producto.id);
 
-      if (encontrado) {
-        const nuevaCantidad = Math.min(
-          encontrado.cantidad + 1,
-          producto.stock,
-          LIMITE_MAXIMO
-        );
+      const item = prev.find(i => i.producto.id === producto.id);
 
+      if (item) {
         return prev.map(i =>
           i.producto.id === producto.id
-            ? { ...i, cantidad: nuevaCantidad }
+            ? { ...i, cantidad: Math.min(i.cantidad + 1, producto.stock, LIMITE_MAXIMO) }
             : i
         );
       }
@@ -117,44 +138,45 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const decreaseQuantity = (productoId: number) => {
+  const decreaseQuantity = (id: number) => {
     setCartItems(prev => {
-      const item = prev.find(i => i.producto.id === productoId);
+      const item = prev.find(i => i.producto.id === id);
 
       if (item && item.cantidad > 1) {
         return prev.map(i =>
-          i.producto.id === productoId
-            ? { 
-                ...i, 
-                cantidad: Math.max(1, item.cantidad - 1)
-              }
+          i.producto.id === id
+            ? { ...i, cantidad: Math.max(1, i.cantidad - 1) }
             : i
         );
       }
 
-      return prev.filter(i => i.producto.id !== productoId);
+      return prev.filter(i => i.producto.id !== id);
     });
   };
 
-  const removeFromCart = (productoId: number) => {
-    setCartItems(prev => prev.filter(i => i.producto.id !== productoId));
+  const removeFromCart = (id: number) => {
+    setCartItems(prev => prev.filter(i => i.producto.id !== id));
   };
 
   const clearCart = () => setCartItems([]);
 
-  const value = {
-    cartItems,
-    addToCart,
-    removeFromCart,
-    decreaseQuantity,
-    clearCart,
 
-    subTotal,
-    descuento,
-    totalFinal,
-    descuentoActivo,
-    setDescuentoActivo
-  };
-
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        decreaseQuantity,
+        clearCart,
+        subTotal,
+        descuento,
+        totalFinal,
+        descuentoActivo,
+        setDescuentoActivo
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
